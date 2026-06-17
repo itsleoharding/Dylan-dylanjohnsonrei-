@@ -523,6 +523,28 @@
       background: #ffffff;
       box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
     }
+    /* Tall screenshot viewer (landing pages): zoomed in, vertical scroll. */
+    .img-scroll {
+      pointer-events: auto;
+      width: min(900px, 92vw);
+      max-height: 88vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 12px;
+      border: 1px solid rgba(177, 247, 204, 0.35);
+      background: #ffffff;
+      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+      text-align: center;
+    }
+    .img-scroll img {
+      display: block;
+      margin: 0 auto;
+      width: 100%;
+      height: auto;
+      max-width: none;
+      max-height: none;
+    }
+
     /* Multi-page PDF viewer: a scrollable stack of rendered pages (PDF.js). */
     .pdf-scroll {
       pointer-events: auto;
@@ -822,7 +844,7 @@
               <div class="mt-6">
                 <a class="cta-button cta-sm"
                    href="Sample%20Deliverables/web/lp-registration.jpg"
-                   data-lb data-lb-type="image" data-lb-title="Registration page"
+                   data-lb data-lb-type="scroll-image" data-lb-title="Registration page"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
                   <span class="cta-sub">Click here to open it up...</span>
@@ -836,7 +858,7 @@
               <div class="mt-6">
                 <a class="cta-button cta-sm"
                    href="Sample%20Deliverables/web/lp-thankyou.jpg"
-                   data-lb data-lb-type="image" data-lb-title="Thank you page"
+                   data-lb data-lb-type="scroll-image" data-lb-title="Thank you page"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
                   <span class="cta-sub">Click here to open it up...</span>
@@ -850,7 +872,7 @@
               <div class="mt-6">
                 <a class="cta-button cta-sm"
                    href="Sample%20Deliverables/web/lp-replay.jpg"
-                   data-lb data-lb-type="image" data-lb-title="Replay page"
+                   data-lb data-lb-type="scroll-image" data-lb-title="Replay page"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
                   <span class="cta-sub">Click here to open it up...</span>
@@ -1024,6 +1046,28 @@
         body.appendChild(img);
       }
 
+      // Tall screenshots (landing pages): show roughly a quarter at a time in a
+      // vertical scroller, zoomed in enough to read, so you slide through it
+      // rather than seeing the whole page shrunk to fit at once.
+      function showScrollImage(src, title) {
+        clear();
+        var box = document.createElement("div");
+        box.className = "img-scroll";
+        var img = document.createElement("img");
+        img.alt = title || "Sample deliverable";
+        img.onload = function () {
+          var vh = box.clientHeight || Math.round(window.innerHeight * 0.88);
+          var ratio = img.naturalWidth / img.naturalHeight;
+          // Width chosen so the on-screen height is ~4x the viewport, i.e. ~25%
+          // of the page is visible at once (capped at the box width).
+          var w = Math.round(vh * 4 * ratio);
+          img.style.width = Math.min(w, box.clientWidth) + "px";
+        };
+        img.src = src;
+        box.appendChild(img);
+        body.appendChild(box);
+      }
+
       function showPdf(src, title) {
         clear();
         // No PDF.js available (CDN blocked / not yet loaded): fall back to a
@@ -1141,6 +1185,8 @@
 
         if (opts.type === "pdf") {
           showPdf(opts.src, opts.title);
+        } else if (opts.type === "scroll-image") {
+          showScrollImage(opts.src, opts.title);
         } else if (opts.type === "carousel") {
           car = { srcs: opts.srcs, i: 0, title: opts.title || "Carousel" };
           lb.classList.add("is-carousel");
