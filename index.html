@@ -526,6 +526,7 @@
     /* Multi-page PDF viewer: a scrollable stack of rendered pages (PDF.js). */
     .pdf-scroll {
       pointer-events: auto;
+      position: relative;
       width: min(900px, 92vw);
       max-height: 88vh;
       overflow-y: auto;
@@ -535,13 +536,18 @@
       background: #ffffff;
       box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
     }
+    .pdf-ph {
+      display: block;
+      width: 100%;
+      background: #ffffff;
+    }
+    .pdf-ph + .pdf-ph {
+      border-top: 1px solid #e5e5e5;
+    }
     .pdf-page {
       display: block;
       width: 100%;
       height: auto;
-    }
-    .pdf-page + .pdf-page {
-      border-top: 1px solid #e5e5e5;
     }
 
     .lightbox-close,
@@ -868,7 +874,8 @@
               <p class="sample-label">Slideshow</p>
               <div class="mt-6">
                 <a class="cta-button cta-sm"
-                   href="https://drive.google.com/file/d/1hsUF8QVcad-ebFW2PdAy4V2KY8FIVvt2/view?usp=sharing"
+                   href="Sample%20Deliverables/Slideshow%20for%20Dylan/Slideshow%20for%20Dylan.pdf"
+                   data-lb data-lb-type="pdf" data-lb-title="Webinar slideshow"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
                   <span class="cta-sub">Click here to open it up...</span>
@@ -1041,28 +1048,71 @@
         window.pdfjsLib
           .getDocument(src)
           .promise.then(function (pdf) {
-            // Render pages sequentially into the scroller so they stack and
-            // scroll on every device, mobile included.
-            function renderPage(num) {
-              pdf.getPage(num).then(function (page) {
-                var unscaled = page.getViewport({ scale: 1 });
-                var targetW = scroller.clientWidth || 880;
-                var viewport = page.getViewport({
-                  scale: (targetW / unscaled.width) * dpr,
-                });
+            var targetW = scroller.clientWidth || 880;
+
+            // Draw one page into its placeholder.
+            function renderInto(ph) {
+              if (ph.__rendered) return;
+              ph.__rendered = true;
+              pdf.getPage(Number(ph.getAttribute("data-page"))).then(function (page) {
+                var base = page.getViewport({ scale: 1 });
+                var viewport = page.getViewport({ scale: (targetW / base.width) * dpr });
                 var canvas = document.createElement("canvas");
                 canvas.className = "pdf-page";
                 canvas.width = viewport.width;
                 canvas.height = viewport.height;
-                scroller.appendChild(canvas);
-                page.render({
-                  canvasContext: canvas.getContext("2d"),
-                  viewport: viewport,
-                });
-                if (num < pdf.numPages) renderPage(num + 1);
+                ph.style.height = "auto";
+                ph.innerHTML = "";
+                ph.appendChild(canvas);
+                page.render({ canvasContext: canvas.getContext("2d"), viewport: viewport });
               });
             }
-            renderPage(1);
+
+            // Release a page that has scrolled far away (frees canvas memory).
+            function freeInto(ph) {
+              if (!ph.__rendered) return;
+              ph.__rendered = false;
+              ph.innerHTML = "";
+              ph.style.height = ph.__estH + "px";
+            }
+
+            // Render pages only as they approach the viewport and release ones
+            // scrolled well away — keeps memory bounded for big decks (this
+            // slideshow is 100 pages) so mobile Safari doesn't run out of memory.
+            // Render only the pages near the viewport and release the rest, so
+            // a big deck (this slideshow is 100 pages) never holds 100 canvases
+            // in memory at once — important for mobile Safari. Driven by scroll
+            // position and run once immediately so page 1 shows right away.
+            var phs = [];
+            function update() {
+              var top = scroller.scrollTop;
+              var vh = scroller.clientHeight;
+              for (var i = 0; i < phs.length; i++) {
+                var ph = phs[i];
+                var pTop = ph.offsetTop;
+                var pBot = pTop + ph.offsetHeight;
+                if (pBot > top - 800 && pTop < top + vh + 800) renderInto(ph);
+                else freeInto(ph);
+              }
+            }
+
+            // Size every placeholder from page 1's aspect ratio up front so the
+            // scrollbar is correct before anything is rendered.
+            pdf.getPage(1).then(function (p1) {
+              var base = p1.getViewport({ scale: 1 });
+              var estH = Math.round(targetW * (base.height / base.width));
+              for (var n = 1; n <= pdf.numPages; n++) {
+                var ph = document.createElement("div");
+                ph.className = "pdf-ph";
+                ph.setAttribute("data-page", n);
+                ph.__estH = estH;
+                ph.style.height = estH + "px";
+                scroller.appendChild(ph);
+                phs.push(ph);
+              }
+              scroller.addEventListener("scroll", update);
+              update();
+            });
           })
           .catch(function () {
             scroller.remove();
