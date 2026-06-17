@@ -184,7 +184,7 @@
       letter-spacing: 0.22em;
       text-transform: uppercase;
       color: var(--sage);
-      font-size: 1.1954rem;
+      font-size: 1.2552rem;
     }
 
     .heading {
@@ -283,6 +283,17 @@
     /* The outer "main widget" that houses one deliverable type: its centered */
     /* heading + the horizontal slider of sample cards. Internal padding (56px)*/
     /* matches the doubled element gaps so the rhythm stays uniform.           */
+    /* Wrapper that holds the four deliverable widgets at the SAME width as the */
+    /* hero video placeholder (92.5% of the content column), centered. The      */
+    /* section heading stays full width above them. Vertical gaps between the   */
+    /* widgets are left untouched so more can be added later.                   */
+    .deliverables-scale {
+      width: 92.5%;
+      max-width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     .row-widget {
       background-color: var(--surface);
       border: 1px solid rgba(177, 247, 204, 0.18);
@@ -411,7 +422,7 @@
     .cta-sub {
       font-family: "JetBrains Mono", monospace;
       font-weight: 500;
-      font-size: 0.7055rem;
+      font-size: 0.6526rem;
       color: rgba(22, 36, 27, 0.72);
       white-space: nowrap;
     }
@@ -511,6 +522,26 @@
       border-radius: 12px;
       background: #ffffff;
       box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+    }
+    /* Multi-page PDF viewer: a scrollable stack of rendered pages (PDF.js). */
+    .pdf-scroll {
+      pointer-events: auto;
+      width: min(900px, 92vw);
+      max-height: 88vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 12px;
+      border: 1px solid rgba(177, 247, 204, 0.35);
+      background: #ffffff;
+      box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.9);
+    }
+    .pdf-page {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .pdf-page + .pdf-page {
+      border-top: 1px solid #e5e5e5;
     }
 
     .lightbox-close,
@@ -629,6 +660,11 @@
       window.addEventListener("orientationchange", setScale);
     })();
   </script>
+
+  <!-- PDF.js (CDN) — renders multi-page PDFs into the lightbox so they page  -->
+  <!-- through on mobile too (a native <iframe> only shows page 1 on iOS) and -->
+  <!-- fetches pages on demand instead of downloading the whole file up front. -->
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 
 <body>
@@ -652,21 +688,21 @@
       <div class="container-narrow">
         <p class="eyebrow fade-up">For Dylan Johnson</p>
 
-        <h1 class="heading fade-up mt-8" style="font-size: 36.783px;">
+        <h1 class="heading fade-up mt-8" style="font-size: 38.622px;">
           I've Spent The Last <span style="color: var(--sage);">Five Days</span><br />
           <u>Working On Something</u> That Allows<br />
-          You To Make An Extra <span style="color: var(--sage);">$30-50k</span> Per Month<br />
+          You To Do An Extra <span style="color: var(--sage);">$30-50k</span> Per Month<br />
           Selling Your Offer <u>One To Many</u>
         </h1>
 
-        <p class="body-copy fade-up mt-6" style="color: var(--muted); font-size: 1.041rem;">
+        <p class="body-copy fade-up mt-6" style="color: var(--muted); font-size: 1.0931rem;">
           (the video right below will explain everything)
         </p>
 
         <!-- LOOM VIDEO FRAME -->
         <div class="video-frame fade-up mt-10">
           <iframe
-            src="[LOOM_EMBED_URL]"
+            src="https://www.loom.com/embed/8e255aa235ea40d9b61767b8b5ca42e2"
             title="Walkthrough for Dylan Johnson"
             allowfullscreen
             allow="autoplay; fullscreen; picture-in-picture">
@@ -693,12 +729,13 @@
     <!-- in-page lightbox, and also carries a real href to the file as a  -->
     <!-- no-JS fallback.                                                  -->
     <!-- ============================================================= -->
-    <section class="pt-20 pb-20">
+    <section class="pt-10 pb-20">
       <div class="container-narrow">
         <h2 class="heading fade-up" style="font-size: 41.4px;">
           Here Are The Sample Deliverables:
         </h2>
 
+        <div class="deliverables-scale">
         <!-- ============ WIDGET 1: AD CREATIVES ============ -->
         <div class="row-widget fade-up mt-10">
           <h3 class="row-heading">Ad Creatives</h3>
@@ -710,7 +747,7 @@
               <p class="sample-label">Static</p>
               <div class="mt-6">
                 <a class="cta-button cta-sm"
-                   href="Sample%20Deliverables/Ad%20Creatives%20for%20Dylan/Static.png"
+                   href="Sample%20Deliverables/web/ad-static.jpg"
                    data-lb data-lb-type="image" data-lb-title="Static ad creative"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
@@ -724,9 +761,9 @@
               <p class="sample-label">Carousel</p>
               <div class="mt-6">
                 <a class="cta-button cta-sm"
-                   href="Sample%20Deliverables/Ad%20Creatives%20for%20Dylan/Carousel/Slide%201.png"
+                   href="Sample%20Deliverables/web/carousel-1.jpg"
                    data-lb data-lb-type="carousel" data-lb-title="Carousel ad creative"
-                   data-lb-srcs="Sample%20Deliverables/Ad%20Creatives%20for%20Dylan/Carousel/Slide%201.png|Sample%20Deliverables/Ad%20Creatives%20for%20Dylan/Carousel/Slide%202.png|Sample%20Deliverables/Ad%20Creatives%20for%20Dylan/Carousel/Slide%203.png|Sample%20Deliverables/Ad%20Creatives%20for%20Dylan/Carousel/Slide%204.png|Sample%20Deliverables/Ad%20Creatives%20for%20Dylan/Carousel/Slide%205.PNG"
+                   data-lb-srcs="Sample%20Deliverables/web/carousel-1.jpg|Sample%20Deliverables/web/carousel-2.jpg|Sample%20Deliverables/web/carousel-3.jpg|Sample%20Deliverables/web/carousel-4.jpg|Sample%20Deliverables/web/carousel-5.jpg"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
                   <span class="cta-sub">Click here to open it up...</span>
@@ -778,7 +815,7 @@
               <p class="sample-label">Registration</p>
               <div class="mt-6">
                 <a class="cta-button cta-sm"
-                   href="Sample%20Deliverables/Landing%20Pages%20for%20Dylan/Registration%20Page.png"
+                   href="Sample%20Deliverables/web/lp-registration.jpg"
                    data-lb data-lb-type="image" data-lb-title="Registration page"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
@@ -792,7 +829,7 @@
               <p class="sample-label">Thank You</p>
               <div class="mt-6">
                 <a class="cta-button cta-sm"
-                   href="Sample%20Deliverables/Landing%20Pages%20for%20Dylan/Thank%20You%20Page.png"
+                   href="Sample%20Deliverables/web/lp-thankyou.jpg"
                    data-lb data-lb-type="image" data-lb-title="Thank you page"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
@@ -806,7 +843,7 @@
               <p class="sample-label">Replay</p>
               <div class="mt-6">
                 <a class="cta-button cta-sm"
-                   href="Sample%20Deliverables/Landing%20Pages%20for%20Dylan/Replay%20Page.png"
+                   href="Sample%20Deliverables/web/lp-replay.jpg"
                    data-lb data-lb-type="image" data-lb-title="Replay page"
                    target="_blank" rel="noopener noreferrer">
                   <span class="cta-main">Get A Closer View</span>
@@ -897,6 +934,7 @@
 
           <p class="slider-hint mt-4">Swipe to browse &rarr;</p>
         </div>
+        </div>
 
       </div>
     </section>
@@ -982,10 +1020,58 @@
 
       function showPdf(src, title) {
         clear();
-        var frame = document.createElement("iframe");
-        frame.src = src;
-        frame.title = title || "Sample deliverable";
-        body.appendChild(frame);
+        // No PDF.js available (CDN blocked / not yet loaded): fall back to a
+        // native iframe. The no-JS href also opens the PDF in a new tab, which
+        // pages correctly in the device's built-in viewer.
+        if (!window.pdfjsLib) {
+          var fallback = document.createElement("iframe");
+          fallback.src = src;
+          fallback.title = title || "Sample deliverable";
+          body.appendChild(fallback);
+          return;
+        }
+        var scroller = document.createElement("div");
+        scroller.className = "pdf-scroll";
+        scroller.setAttribute("aria-label", title || "PDF document");
+        body.appendChild(scroller);
+        if (!window.pdfjsLib.GlobalWorkerOptions.workerSrc) {
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+            "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        }
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        window.pdfjsLib
+          .getDocument(src)
+          .promise.then(function (pdf) {
+            // Render pages sequentially into the scroller so they stack and
+            // scroll on every device, mobile included.
+            function renderPage(num) {
+              pdf.getPage(num).then(function (page) {
+                var unscaled = page.getViewport({ scale: 1 });
+                var targetW = scroller.clientWidth || 880;
+                var viewport = page.getViewport({
+                  scale: (targetW / unscaled.width) * dpr,
+                });
+                var canvas = document.createElement("canvas");
+                canvas.className = "pdf-page";
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+                scroller.appendChild(canvas);
+                page.render({
+                  canvasContext: canvas.getContext("2d"),
+                  viewport: viewport,
+                });
+                if (num < pdf.numPages) renderPage(num + 1);
+              });
+            }
+            renderPage(1);
+          })
+          .catch(function () {
+            scroller.remove();
+            var frame = document.createElement("iframe");
+            frame.src = src;
+            frame.title = title || "Sample deliverable";
+            body.appendChild(frame);
+          });
       }
 
       function renderCarousel() {

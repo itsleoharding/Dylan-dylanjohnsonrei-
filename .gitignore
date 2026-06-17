@@ -1,0 +1,7 @@
+# Local dev / tooling — never deployed
+.claude/
+node_modules/
+package.json
+package-lock.json
+npm-debug.log*
+scripts/
